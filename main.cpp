@@ -1,7 +1,7 @@
 #include "imgui/imgui.h"
 #include "backends/imgui_impl_win32.h"
 #include "backends/imgui_impl_dx11.h"
-
+#include "implot/implot.h"
 #include <d3d11.h>
 #include <tchar.h>
 #include <iostream>
@@ -85,13 +85,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
         ImGui::End();
 
 
-        // Example window
-        ImGui::Begin("ZIOOOO");
-        ImGui::Text("ZIOOOO");
-        if (ImGui::Button("ZIOOOO")) {
-            free_falling_without_air_resistance(2.0f);  // Call your function here
+        ImGui::CreateContext();
+        ImPlot::CreateContext();
+
+        // Example mock data arrays (specific x and y values)
+        float x_data[10] = {0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f};
+        float y_data[10] = {5.f, 7.f, 6.f, 8.f, 7.f, 9.f, 8.f, 10.f, 9.f, 11.f};
+
+        ImGui::Begin("Plot Example");
+
+        if (ImPlot::BeginPlot("My Plot")) {
+            ImPlot::PlotLine("Data Series", x_data, y_data, 10);
+            ImPlot::EndPlot();
         }
+
         ImGui::End();
+
 
 
 
@@ -107,7 +116,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
     // Cleanup
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
+    ImPlot::DestroyContext();
     ImGui::DestroyContext();
+    //ImGui::DestroyContext();
     CleanupDeviceD3D();
     ::DestroyWindow(g_hWnd);
     ::UnregisterClass(wc.lpszClassName, wc.hInstance);

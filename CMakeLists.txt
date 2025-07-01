@@ -9,22 +9,30 @@ file(GLOB IMGUI_SRC
         imgui/backends/imgui_impl_dx11.cpp
 )
 
+file(GLOB IMPLOT_SRC
+        implot/implot.cpp
+        implot/implot_items.cpp
+        implot/implot_demo.cpp  # opzionale, rimuovilo se non ti serve
+)
+
 add_executable(WorldSimulation
         main.cpp
         Kinematics.cpp
         ${IMGUI_SRC}
+        ${IMPLOT_SRC}
 )
 
 target_include_directories(WorldSimulation PRIVATE
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui
         ${CMAKE_CURRENT_SOURCE_DIR}/imgui/backends
+        ${CMAKE_CURRENT_SOURCE_DIR}/implot
 )
 
 target_link_libraries(WorldSimulation
         d3d11
         dxgi
         d3dcompiler
-        dwmapi          # ✅ <-- AGGIUNTO PER RISOLVERE L'ERRORE
+        dwmapi          # indispensabile per Dwm* (errore risolto)
         kernel32
         user32
         gdi32
