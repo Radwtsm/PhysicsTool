@@ -2,17 +2,12 @@
 // Created by ramesh on 7/4/2025.
 //
 #include "../imgui/imgui.h"
-#include "backends/imgui_impl_win32.h"
-#include "backends/imgui_impl_dx11.h"
 #include "../implot/implot.h"
 #include <d3d11.h>
 #include <tchar.h>
-#include <iostream>
-#include "../kinematics.h"
-
 #include "frefall_window.h"
-#include <chrono>
 #include <vector>
+#include "../RealTimeSimulator.h"
 
 char buf[128] = "";
 bool show_error = false;
@@ -29,10 +24,12 @@ float Vo = 0;
 float a = 9.8;
 
 double start_time = 0.0;
+auto Simulator = RealTimeSimulator();
 
-void update_freefall_simulation(double current_t) {
+// add values for the current t in x_data(time), y_data (position)
+void update_freefall_simulation(const double current_t) {
     if (current_t <= target_time) {
-        double x = Xo + (Vo * current_t) + 0.5 * a * current_t * current_t;
+        const double x = Xo + (Vo * current_t) + 0.5 * a * current_t * current_t;
 
         if (x_data.empty() || current_t > x_data.back()) {
             x_data.push_back(current_t);
@@ -41,14 +38,16 @@ void update_freefall_simulation(double current_t) {
     }
 
     if (current_t >= target_time && (x_data.empty() || x_data.back() < target_time)) {
-        double x_final = Xo + (Vo * target_time) + 0.5 * a * target_time * target_time;
+        const double x_final = Xo + (Vo * target_time) + 0.5 * a * target_time * target_time;
         x_data.push_back(target_time);
         y_data.push_back(x_final);
     }
 }
 
-// how much distance does a freefalling object travel in n (input) seconds.
+// Shows distance traveled by a freefalling object. Graph shows position over time.
 void freefall_window() {
+
+    // initialize window
     if (ImGui::Begin("Free Fall Simulation")) {
         ImGui::Text("Enter simulation time (seconds):");
         ImGui::InputText("Time (seconds)", buf, IM_ARRAYSIZE(buf));
@@ -59,9 +58,9 @@ void freefall_window() {
 
         if (ImGui::Button("Run Free Fall Simulation")) {
             char* endptr;
-            float value = strtof(buf, &endptr);
 
-            if (buf[0] == '\0' || *endptr != '\0' || value <= 0.0f) {
+            // takes the value from the input widget, and
+            if (const float value = strtof(buf, &endptr); buf[0] == '\0' || *endptr != '\0' || value <= 0.0f) {
                 show_error = true;
                 show_graph = false;
             } else {
@@ -73,13 +72,13 @@ void freefall_window() {
                 x_data.clear();
                 y_data.clear();
 
-                start_time = ImGui::GetTime();
+                Simulator.start();
+                start_time = Simulator.get_start();
             }
         }
 
         if (show_graph) {
-            double current = ImGui::GetTime();
-            double elapsed_time = current - start_time;
+            const double elapsed_time = Simulator.elapsed();
             current_t = elapsed_time;
 
             if (current_t <= target_time) {
@@ -87,7 +86,7 @@ void freefall_window() {
             }
 
             if (ImPlot::BeginPlot("Position vs Time")) {
-                ImPlot::PlotLine("x(t)", x_data.data(), y_data.data(), x_data.size());
+                ImPlot::PlotLine("x(t)", x_data.data(), y_data.data(),   x_data.size());
                 ImPlot::EndPlot();
 
                 if (!y_data.empty()) {

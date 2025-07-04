@@ -22,6 +22,8 @@ add_executable(WorldSimulation
         ${IMPLOT_SRC}
         windows/frefall_window.cpp
         windows/frefall_window.h
+        RealTimeSimulator.cpp
+        RealTimeSimulator.h
 )
 
 target_include_directories(WorldSimulation PRIVATE
