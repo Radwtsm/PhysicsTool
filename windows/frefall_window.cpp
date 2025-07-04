@@ -44,10 +44,10 @@ void update_freefall_simulation(const double current_t) {
     }
 }
 
-// Shows distance traveled by a freefalling object. Graph shows position over time.
+// Shows distance traveled by a freefalling object. The graph shows position over time.
 void freefall_window() {
 
-    // initialize window
+    // initialize the simulation window
     if (ImGui::Begin("Free Fall Simulation")) {
         ImGui::Text("Enter simulation time (seconds):");
         ImGui::InputText("Time (seconds)", buf, IM_ARRAYSIZE(buf));
@@ -59,14 +59,20 @@ void freefall_window() {
         if (ImGui::Button("Run Free Fall Simulation")) {
             char* endptr;
 
-            // takes the value from the input widget, and
+            // takes the value from the input widget.
+            // checks if the string is empty
+            // checks that there are no letters
+            // checks for negative values
+            // gets the string in buf and casts it to float
             if (const float value = strtof(buf, &endptr); buf[0] == '\0' || *endptr != '\0' || value <= 0.0f) {
                 show_error = true;
                 show_graph = false;
             } else {
+                // starts simulation with correct data
                 show_error = false;
                 show_graph = true;
 
+                // float from user input to float
                 target_time = value;
                 current_t = 0.0;
                 x_data.clear();
@@ -78,6 +84,7 @@ void freefall_window() {
         }
 
         if (show_graph) {
+            // now() - start_time
             const double elapsed_time = Simulator.elapsed();
             current_t = elapsed_time;
 
