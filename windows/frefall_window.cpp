@@ -9,12 +9,18 @@
 #include <vector>
 #include "../RealTimeSimulator.h"
 
+// user seconds input text
 char buf[128] = "";
+
 bool show_error = false;
 bool show_graph = false;
 
 std::vector<double> x_data;
 std::vector<double> y_data;
+
+// initial zoom levels
+double x_min = 0.0, x_max = 5.0;  // initial X
+double y_min = 0.0, y_max = 50.0; // initial Y
 
 double target_time = 0.0;
 double current_t = 0.0;
@@ -44,6 +50,7 @@ void update_freefall_simulation(const double current_t) {
     }
 }
 
+// TODO Add another field, where the user can insert a distance (m), and see how much it takes to travel that distance (button to stop is needed).
 // Shows distance traveled by a freefalling object. The graph shows position over time.
 void freefall_window() {
 
@@ -92,7 +99,33 @@ void freefall_window() {
                 update_freefall_simulation(current_t);
             }
 
+            // buttons for zooming in and out.
+            if (ImGui::Button("Zoom In")) {
+                double x_range = (x_max - x_min) * 0.5;
+                double y_range = (y_max - y_min) * 0.5;
+                x_min += x_range * 0.25;
+                x_max -= x_range * 0.25;
+                y_min += y_range * 0.25;
+                y_max -= y_range * 0.25;
+            }
+
+            ImGui::SameLine();
+
+            if (ImGui::Button("Zoom Out")) {
+                double x_range = (x_max - x_min);
+                double y_range = (y_max - y_min);
+                x_min -= x_range * 0.5;
+                x_max += x_range * 0.5;
+                y_min -= y_range * 0.5;
+                y_max += y_range * 0.5;
+            }
+
+
             if (ImPlot::BeginPlot("Position vs Time")) {
+                // default starting limits for the axis.
+                ImPlot::SetupAxisLimits(ImAxis_X1, x_min, x_max, ImGuiCond_Always);
+                ImPlot::SetupAxisLimits(ImAxis_Y1, y_min, y_max, ImGuiCond_Always);
+
                 ImPlot::PlotLine("x(t)", x_data.data(), y_data.data(),   x_data.size());
                 ImPlot::EndPlot();
 
