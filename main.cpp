@@ -6,6 +6,7 @@
 #include <tchar.h>
 #include <iostream>
 #include "kinematics.h"
+#include "windows/frefall_window.h"
 // Data
 static ID3D11Device*            g_pd3dDevice = nullptr;
 static ID3D11DeviceContext*     g_pd3dDeviceContext = nullptr;
@@ -57,7 +58,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
     ImGui_ImplDX11_Init(g_pd3dDevice, g_pd3dDeviceContext);
 
     // Main loop
-    bool show_demo_window = true;
     bool done = false;
     while (!done)
     {
@@ -76,33 +76,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        // Example window
-        ImGui::Begin("Free Fall Simulation");
-        ImGui::Text("Press the button to simulate:");
-        if (ImGui::Button("Run Free Fall Simulation")) {
-            free_falling_without_air_resistance(2.0f);  // Call your function here
-        }
-        ImGui::End();
-
-
         ImGui::CreateContext();
         ImPlot::CreateContext();
-
-        // Example mock data arrays (specific x and y values)
-        float x_data[10] = {0.f, 1.f, 2.f, 3.f, 4.f, 5.f, 6.f, 7.f, 8.f, 9.f};
-        float y_data[10] = {5.f, 7.f, 6.f, 8.f, 7.f, 9.f, 8.f, 10.f, 9.f, 11.f};
-
-        ImGui::Begin("Plot Example");
-
-        if (ImPlot::BeginPlot("My Plot")) {
-            ImPlot::PlotLine("Data Series", x_data, y_data, 10);
-            ImPlot::EndPlot();
-        }
-
-        ImGui::End();
-
-
-
+        // caduta libera
+        freefall_window();
 
         // Rendering
         ImGui::Render();

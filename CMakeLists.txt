@@ -20,6 +20,8 @@ add_executable(WorldSimulation
         Kinematics.cpp
         ${IMGUI_SRC}
         ${IMPLOT_SRC}
+        windows/frefall_window.cpp
+        windows/frefall_window.h
 )
 
 target_include_directories(WorldSimulation PRIVATE
