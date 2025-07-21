@@ -24,6 +24,10 @@ add_executable(WorldSimulation
         windows/frefall_window.h
         RealTimeSimulator.cpp
         RealTimeSimulator.h
+        sensor_signal.cpp
+        sensor_signal.h
+        windows/signal_simulator_window.cpp
+        windows/signal_simulator_window.h
 )
 
 target_include_directories(WorldSimulation PRIVATE

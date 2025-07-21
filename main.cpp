@@ -7,6 +7,8 @@
 #include <iostream>
 #include "kinematics.h"
 #include "windows/frefall_window.h"
+#include "windows/signal_simulator_window.h"
+#include "sensor_signal.h"
 // Data
 static ID3D11Device*            g_pd3dDevice = nullptr;
 static ID3D11DeviceContext*     g_pd3dDeviceContext = nullptr;
@@ -21,6 +23,7 @@ void CreateRenderTarget();
 void CleanupRenderTarget();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+using namespace SensorSim;
 
 
 // Main code
@@ -80,6 +83,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
         ImPlot::CreateContext();
         // caduta libera
         freefall_window();
+        signal_simulator_window();
 
         // Rendering
         ImGui::Render();
