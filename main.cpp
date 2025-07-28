@@ -8,6 +8,7 @@
 #include "kinematics.h"
 #include "windows/frefall_window.h"
 #include "windows/signal_simulator_window.h"
+#include "windows/body_problem_window.h"
 #include "sensor_signal.h"
 // Data
 static ID3D11Device*            g_pd3dDevice = nullptr;
@@ -84,6 +85,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
         // caduta libera
         freefall_window();
         signal_simulator_window();
+        n_body_problem_window();
 
         // Rendering
         ImGui::Render();

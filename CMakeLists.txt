@@ -28,6 +28,10 @@ add_executable(WorldSimulation
         sensor_signal.h
         windows/signal_simulator_window.cpp
         windows/signal_simulator_window.h
+        ParticleAttractor.cpp
+        ParticleAttractor.h
+        windows/body_problem_window.cpp
+        windows/body_problem_window.h
 )
 
 target_include_directories(WorldSimulation PRIVATE
