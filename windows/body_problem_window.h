@@ -7,7 +7,7 @@
 
 
 
-void n_body_problem_window();
+void particle_simulation_window();
 
 
 
